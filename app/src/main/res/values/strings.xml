@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">PM01APP1</string>
+    <string name="mensaje_exito">Operación realizada con éxito</string>
+    <string name="mensaje_error">Error al realizar la operación</string>
+    <string name="title_activity_list">ActivityList</string>
+</resources>
