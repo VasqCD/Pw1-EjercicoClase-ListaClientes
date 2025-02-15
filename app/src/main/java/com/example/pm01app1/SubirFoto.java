@@ -1,6 +1,5 @@
 package com.example.pm01app1;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -54,23 +53,23 @@ public class SubirFoto extends AppCompatActivity {
                 (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            choosePhotoFromGallery();
+                            fotoGaleria();
                             break;
                         case 1:
-                            takePhotoFromCamera();
+                            fotoCamara();
                             break;
                     }
                 });
         pictureDialog.show();
     }
 
-    public void choosePhotoFromGallery() {
+    public void fotoGaleria() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, REQUEST_IMAGE_PICK);
     }
 
-    private void takePhotoFromCamera() {
+    private void fotoCamara() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
