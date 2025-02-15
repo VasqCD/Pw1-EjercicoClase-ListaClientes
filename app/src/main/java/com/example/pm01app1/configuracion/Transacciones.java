@@ -11,6 +11,7 @@ public class Transacciones {
     public static final String nombres = "nombres";
     public static final String apellidos = "apellidos";
     public static final String correo = "correo";
+    public static final String foto = "foto"; // Nueva columna para la foto
 
     // DDL
     public static final String CreateTableClient =
@@ -18,11 +19,11 @@ public class Transacciones {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "nombres TEXT, " +
                     "apellidos TEXT, " +
-                    "correo TEXT)";
+                    "correo TEXT, " +
+                    "foto TEXT)"; // Nueva columna para la foto
 
-    public static  final String DropTableClient = "DROP TABLE IF EXISTS Clientes";
+    public static final String DropTableClient = "DROP TABLE IF EXISTS Clientes";
 
     // DML
     public static final String SelectTableClient = "SELECT * FROM " + tabla_clientes;
 }
-

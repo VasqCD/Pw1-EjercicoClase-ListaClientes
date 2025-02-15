@@ -22,7 +22,7 @@ public class ActivityDash extends AppCompatActivity {
 
         btnClient = findViewById(R.id.btnAdd);
         btnList = findViewById(R.id.btnList);
-        btnCapturePhoto = findViewById(R.id.btnCapturePhoto);
+
 
 
         btnClient.setOnClickListener(v -> {
@@ -34,9 +34,7 @@ public class ActivityDash extends AppCompatActivity {
             startActivity(new Intent(ActivityDash.this, ActivityLists.class));
         });
 
-        btnCapturePhoto.setOnClickListener(v -> {
-            startActivity(new Intent(ActivityDash.this, SubirFoto.class));
-        });
+
 
     }
 }

@@ -1,12 +1,9 @@
 package com.example.pm01app1;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,7 +20,6 @@ public class ActivityLists extends AppCompatActivity {
 
     SQLiteConexion conexion;
     ListView listaClientes;
-    ArrayList<String> arreglo;
     ArrayList<Cliente> lista;
 
     @Override
@@ -36,41 +32,47 @@ public class ActivityLists extends AppCompatActivity {
         listaClientes = findViewById(R.id.listclient);
 
         lista = new ArrayList<>();
-        arreglo = new ArrayList<>();
 
         ObtenrInfo();
 
-        ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arreglo);
-        listaClientes.setAdapter(adp);
+        CustomAdapter adapter = new CustomAdapter(this, lista);
+        listaClientes.setAdapter(adapter);
 
+        listaClientes.setOnItemClickListener((parent, view, position, id) -> {
+            Cliente clienteSeleccionado = lista.get(position);
 
+            Intent intent = new Intent(ActivityLists.this, ClientDetailActivity.class);
+            intent.putExtra("nombres", clienteSeleccionado.getNombres());
+            intent.putExtra("apellidos", clienteSeleccionado.getApellidos());
+            intent.putExtra("correo", clienteSeleccionado.getCorreo());
+            intent.putExtra("foto", clienteSeleccionado.getFoto());
+
+            startActivity(intent);
+        });
     }
 
     private void ObtenrInfo() {
-        SQLiteDatabase db = conexion.getReadableDatabase();
-        Cliente cliente;
+        try {
+            SQLiteDatabase db = conexion.getReadableDatabase();
+            Cliente cliente;
 
-        Cursor cursor = db.rawQuery(Transacciones.SelectTableClient, null);
+            Cursor cursor = db.rawQuery(Transacciones.SelectTableClient, null);
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                cliente = new Cliente();
-                cliente.setId(cursor.getInt(0));
-                cliente.setNombres(cursor.getString(1));
-                cliente.setApellidos(cursor.getString(2));
-                cliente.setCorreo(cursor.getString(3));
-                lista.add(cliente);
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    cliente = new Cliente();
+                    cliente.setId(cursor.getInt(0));
+                    cliente.setNombres(cursor.getString(1));
+                    cliente.setApellidos(cursor.getString(2));
+                    cliente.setCorreo(cursor.getString(3));
+                    cliente.setFoto(cursor.getString(4));
+                    lista.add(cliente);
+                }
+                cursor.close();
             }
-            cursor.close();
-        }
-
-        FillData();
-    }
-
-    private void FillData() {
-        for (Cliente cliente : lista) {
-            arreglo.add(cliente.getId() + " | " + cliente.getNombres() + " | " + cliente.getApellidos() + " | " + cliente.getCorreo());
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al cargar la lista: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
     }
 }
-// Funcion enviado a git

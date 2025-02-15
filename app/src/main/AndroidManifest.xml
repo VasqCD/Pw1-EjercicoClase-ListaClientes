@@ -33,16 +33,16 @@
         <activity
             android:name=".ActivityLists"
             android:exported="false" />
-
-        <activity
-            android:name=".SubirFoto"
-            android:exported="false" />
         <activity
             android:name=".ActivityPrincipal"
             android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".ClientDetailActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

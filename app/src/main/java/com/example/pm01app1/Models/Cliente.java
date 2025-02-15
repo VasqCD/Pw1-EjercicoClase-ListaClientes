@@ -5,15 +5,17 @@ public class Cliente {
     private String nombres;
     private String apellidos;
     private String correo;
+    private String foto;
 
     public Cliente() {
     }
 
-    public Cliente(Integer id, String nombres, String apellidos, String correo) {
+    public Cliente(Integer id, String nombres, String apellidos, String correo, String foto) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.correo = correo;
+        this.foto = foto;
     }
 
     public Integer getId() {
@@ -46,5 +48,13 @@ public class Cliente {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }

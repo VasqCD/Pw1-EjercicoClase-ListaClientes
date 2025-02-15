@@ -25,7 +25,9 @@ import com.example.pm01app1.configuracion.SQLiteConexion;
 import com.example.pm01app1.configuracion.Transacciones;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -130,14 +132,43 @@ public class ActivityPrincipal extends AppCompatActivity {
                 if (file.exists()) {
                     vistaFoto.setImageURI(Uri.fromFile(file));
                 }
-            } else if (requestCode == REQUEST_IMAGE_PICK) {
+            } else if (requestCode == REQUEST_IMAGE_PICK && data != null) {
                 Uri selectedImageUri = data.getData();
                 if (selectedImageUri != null) {
-                    vistaFoto.setImageURI(selectedImageUri);
+                    try {
+                        // Crear una copia del archivo seleccionado en el almacenamiento de la app
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                        String imageFileName = "JPEG_" + timeStamp + "_";
+                        File storageDir = getExternalFilesDir(null);
+                        File imageFile = File.createTempFile(
+                                imageFileName,
+                                ".jpg",
+                                storageDir
+                        );
+
+                        // Copiar el contenido de la imagen seleccionada
+                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+                        FileOutputStream outputStream = new FileOutputStream(imageFile);
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = inputStream.read(buffer)) > 0) {
+                            outputStream.write(buffer, 0, length);
+                        }
+                        outputStream.close();
+                        inputStream.close();
+
+                        // Actualizar la ruta de la imagen
+                        currentPhotoPath = imageFile.getAbsolutePath();
+                        vistaFoto.setImageURI(Uri.fromFile(imageFile));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Error al procesar la imagen", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         } else {
-            Toast.makeText(this, "No se tomó la fotografía", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -150,6 +181,7 @@ public class ActivityPrincipal extends AppCompatActivity {
             valores.put(Transacciones.nombres, nombres.getText().toString());
             valores.put(Transacciones.apellidos, apellidos.getText().toString());
             valores.put(Transacciones.correo, correo.getText().toString());
+            valores.put(Transacciones.foto, currentPhotoPath); // Guardar la ruta de la foto
 
             Long resultado = db.insert(Transacciones.tabla_clientes, Transacciones.id, valores);
 
